@@ -1,4 +1,16 @@
 """Configuration for Productivity Hub - Unified Agent."""
+import os
+from pathlib import Path
+
+# Load .env.local if it exists
+env_local = Path(__file__).parent.parent.parent / ".env.local"
+if env_local.exists():
+    with open(env_local) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, value = line.split("=", 1)
+                os.environ.setdefault(key.strip(), value.strip())
 
 CONFIG = {
     # Speech-to-Text settings
@@ -24,7 +36,7 @@ CONFIG = {
 
     # Groq API (shared for both STT and Voice Commander)
     "use_groq": True,  # Using Groq cloud API
-    "groq_api_key": "",  # Set via GROQ_API_KEY env variable
+    "groq_api_key": os.environ.get("GROQ_API_KEY", ""),
 
     # Local whisper settings (fallback when use_groq is False)
     "model_size": "base",

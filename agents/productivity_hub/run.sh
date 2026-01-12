@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Productivity Hub - Unified Agent
-# Run script using the shared venv from speech_to_text_agent
+# Run script using local venv
 
 cd "$(dirname "$0")"
 
-# Use venv from speech_to_text_agent
-source ../speech_to_text_agent/venv/bin/activate
+# Use local venv
+source ./venv/bin/activate
 
 # Run as background process
 nohup python main.py > /dev/null 2>&1 &
