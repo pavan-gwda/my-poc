@@ -1,0 +1,73 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: siem-platform
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+siem:
+  kafka:
+    bootstrap-servers: localhost:9092
+    topics:
+      # Raw log ingestion topics (partitioned by source)
+      raw-auth-logs: raw-auth-logs
+      raw-firewall-logs: raw-firewall-logs
+      raw-web-logs: raw-web-logs
+      raw-dns-logs: raw-dns-logs
+      raw-endpoint-logs: raw-endpoint-logs
+      # Normalized/enriched logs
+      normalized-logs: normalized-security-logs
+      # Detection outputs
+      alerts: security-alerts
+      threats: detected-threats
+      # Metrics
+      metrics: security-metrics
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    queues:
+      critical-alerts: critical-alert-queue
+      high-alerts: high-alert-queue
+      medium-alerts: medium-alert-queue
+      incident-creation: incident-creation-queue
+      dead-letter: siem-dlq
+    exchanges:
+      alerts: security-alert-exchange
+      dead-letter: siem-dlx
+  detection:
+    # Brute force detection thresholds
+    brute-force:
+      window-minutes: 5
+      threshold: 10
+    # Port scan detection
+    port-scan:
+      window-minutes: 1
+      threshold: 20
+    # Data exfiltration detection
+    exfiltration:
+      window-minutes: 10
+      bytes-threshold: 104857600  # 100MB
+  simulator:
+    enabled: true

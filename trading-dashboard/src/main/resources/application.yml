@@ -1,0 +1,78 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: trading-dashboard
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+---
+# Local Development Profile
+spring:
+  config:
+    activate:
+      on-profile: local
+
+trading:
+  kafka:
+    bootstrap-servers: localhost:9092
+    schema-registry-url: http://localhost:8081
+    topics:
+      price-ticks: stock-price-ticks
+      ohlc-candles: stock-ohlc-candles
+      orders: trading-orders
+      portfolio-updates: portfolio-updates
+      alerts: price-alerts
+      holdings-by-symbol: holdings-by-symbol
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    queues:
+      notifications: notification-queue
+      email: email-notification-queue
+      dead-letter: notification-dlq
+    exchanges:
+      notifications: notification-exchange
+      dead-letter: notification-dlx
+  alphavantage:
+    api-key: ${ALPHA_VANTAGE_API_KEY:FM8GYJB2UQP408YY}  # Get free key at alphavantage.co
+
+---
+# Production Profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+trading:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    schema-registry-url: ${SCHEMA_REGISTRY_URL}
+    ssl:
+      enabled: true
+      truststore-location: ${KAFKA_TRUSTSTORE_LOCATION}
+      truststore-password: ${KAFKA_TRUSTSTORE_PASSWORD}
+    topics:
+      price-ticks: ${KAFKA_TOPIC_PRICE_TICKS:stock-price-ticks}
+      ohlc-candles: ${KAFKA_TOPIC_OHLC:stock-ohlc-candles}
+      orders: ${KAFKA_TOPIC_ORDERS:trading-orders}
+      portfolio-updates: ${KAFKA_TOPIC_PORTFOLIO:portfolio-updates}
+      alerts: ${KAFKA_TOPIC_ALERTS:price-alerts}
+      holdings-by-symbol: ${KAFKA_TOPIC_HOLDINGS:holdings-by-symbol}
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    ssl:
+      enabled: true
+    queues:
+      notifications: ${RABBITMQ_QUEUE_NOTIFICATIONS:notification-queue}
+      email: ${RABBITMQ_QUEUE_EMAIL:email-notification-queue}
+      dead-letter: ${RABBITMQ_QUEUE_DLQ:notification-dlq}
+    exchanges:
+      notifications: ${RABBITMQ_EXCHANGE_NOTIFICATIONS:notification-exchange}
+      dead-letter: ${RABBITMQ_EXCHANGE_DLX:notification-dlx}

@@ -1,0 +1,19 @@
+# Market Intelligence Agent Dependencies
+
+# GUI Framework
+PyQt6>=6.5.0
+
+# Financial Data
+yfinance>=0.2.31
+
+# Web Scraping & Parsing
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+feedparser>=6.0.10
+lxml>=4.9.0
+
+# Data Processing
+pandas>=2.0.0
+
+# Utilities
+python-dateutil>=2.8.2

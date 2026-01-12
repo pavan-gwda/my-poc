@@ -1,0 +1,25 @@
+Quick setup (Linux/macOS/Windows WSL)
+1. Install Ollama: https://ollama.com
+2. Pull a model: ollama pull llama3
+3. Backend:
+   cd backend
+   npm install
+   npm start
+4. RAG:
+   cd rag
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   python rag_service.py
+5. Frontend:
+   cd frontend
+   npm install
+   npm run dev
+6. Electron (optional):
+   cd electron
+   npm install
+   npm start
+Notes:
+- Speech-to-text: use VOSK or whisper.cpp. The backend provides /speech/upload where files are saved to backend/uploads/.
+- TTS: use pyttsx3 in Python to synthesize "reply" text.
+- Secure tool endpoints before exposing them to networks.
